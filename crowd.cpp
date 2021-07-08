@@ -1,12 +1,11 @@
 #include <QPainter>
 #include "crowd.h"
-#include <iostream>
 using namespace std;
 
 Crowd::Crowd()
 {
-    Particle* particle;
     setCount(10);
+    Particle* particle;
     for(int i=0;i<getCount();++i){
         particle = new Particle(rand()%600,rand()%600);
         if(i<getCount()/2){
@@ -14,11 +13,38 @@ Crowd::Crowd()
         }else{
             particle->setGroup(1);
         }
-        particle->setDisease(float(rand()%100)*0.01);
-        cout<<"particle disease="<<particle->getDisease()<<endl;
+        float disease = rand()%100*0.01;
+        particle->setDisease(disease);
+        cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
         particles.push_back(particle);
-//        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
+        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
     }
+}
+
+Crowd::Crowd(int count)
+{
+    setCount(count);
+    Particle* particle;
+    for(int i=0;i<getCount();++i){
+        particle = new Particle(rand()%600,rand()%600);
+        if(i<getCount()/2){
+            particle->setGroup(0);
+        }else{
+            particle->setGroup(1);
+        }
+        float disease = rand()%100*0.01;
+        particle->setDisease(disease);
+        cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
+        particles.push_back(particle);
+        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
+    }
+}
+
+Crowd::~Crowd()
+{
+    Particle* particle;
+    foreach(particle,particles)
+        delete particle;
 }
 
 QRectF Crowd::boundingRect() const
@@ -55,4 +81,9 @@ void Crowd::setCount(int n)
 int Crowd::getCount()
 {
     return count;
+}
+
+void Crowd::setParticleStatus(int index,float* status)
+{
+    particles[index]->setStatus(status);
 }

@@ -1,25 +1,32 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
-#include <QtGlobal>
-
+#include <iostream>
+#include <QList>
 class Particle
 {
 public:
     Particle();
-    Particle(qreal,qreal);
-    qreal getX();
-    void setX(qreal);
-    qreal getY();
-    void setY(qreal);
+    Particle(float,float);
+    ~Particle();
+    float getX();
+    void setX(float);
+    float getY();
+    void setY(float);
+    float getDirection();
+    void setDirection(float,float);
     void setGroup(int);
     int getGroup();
-    void setDisease(qreal);
-    qreal getDisease();
+    void setDisease(float);
+    float getDisease();
+    void setStatus(float,float,float,float,int,float);
+    void setStatus(float*);
+    void appendHistory();
 private:
-    qreal x;
-    qreal y;
+    float x;
+    float y;
     int group;
-    qreal disease;
+    float disease;
+    QList<float*> history;
 };
 
 #endif // PARTICLE_H

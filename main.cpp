@@ -17,6 +17,11 @@ int main(int argc, char *argv[])
 
     QApplication a(argc,argv);
     View w;
+    w.setCrowdCount(20);
+    float status[6]={0,0,0,0,1,0};
+    w.setParticle(19,status);
+    float status2[6]={3,3,0,0,0,1};
+    w.setParticle(0,status2);
     w.show();
     return a.exec();
 }

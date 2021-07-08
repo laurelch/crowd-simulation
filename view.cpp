@@ -1,6 +1,4 @@
-#include <iostream>
 #include "view.h"
-#include "crowd.h"
 
 View::View(QWidget *parent)
     : QGraphicsView(parent)
@@ -14,7 +12,8 @@ View::View(QWidget *parent)
 //        circleItem->setBrush(QColor(255,0,0));
 //        scene()->addItem(circleItem);
 //    }
-    Crowd *crowd = new Crowd();
+
+    crowd = new Crowd();
     scene()->addItem(crowd);
     setAlignment(Qt::AlignTop|Qt::AlignLeft);
     scene()->setSceneRect(QRect(0,0,1250,650));
@@ -23,6 +22,7 @@ View::View(QWidget *parent)
 View::~View()
 {
     delete scene();
+    delete crowd;
 }
 
 void View::wheelEvent(QWheelEvent *event)
@@ -31,7 +31,7 @@ void View::wheelEvent(QWheelEvent *event)
     if(event->isAccepted()){
         return;
     }
-    const qreal factor = 1.1;
+    const float factor = 1.1;
     if(event->angleDelta().y()>0){
         scale(factor,factor);
     }else{
@@ -49,7 +49,8 @@ void View::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Space:
             togglePause();
             std::cout<<"View::keyPressEvent space pressed. pause="<<getPauseCondition()<<std::endl;
-            break;
+
+        break;
         case Qt::Key_S:
             incrementStep();
             std::cout<<"View::keyPressEvent S pressed. step="<<getStepCount()<<std::endl;
@@ -94,4 +95,16 @@ void View::togglePause()
 int View::getPauseCondition()
 {
     return pause;
+}
+
+void View::setCrowdCount(int count)
+{
+    delete crowd;
+    crowd = new Crowd(count);
+    scene()->addItem(crowd);
+}
+
+void View::setParticle(int i,float* status)
+{
+    crowd->setParticleStatus(i,status);
 }
