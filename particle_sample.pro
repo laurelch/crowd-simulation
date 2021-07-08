@@ -9,12 +9,16 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    MIGBasicSim.cpp \
+    Person.cpp \
     crowd.cpp \
     main.cpp \
     particle.cpp \
     view.cpp
 
 HEADERS += \
+    MIGBasicSim.h \
+    Person.h \
     crowd.h \
     particle.h \
     view.h

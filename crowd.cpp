@@ -15,9 +15,9 @@ Crowd::Crowd()
         }
         float disease = rand()%100*0.01;
         particle->setDisease(disease);
-        cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
+        //cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
         particles.push_back(particle);
-        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
+        //cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
     }
 }
 
@@ -34,9 +34,9 @@ Crowd::Crowd(int count)
         }
         float disease = rand()%100*0.01;
         particle->setDisease(disease);
-        cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
+        //cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
         particles.push_back(particle);
-        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
+        //cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
     }
 }
 

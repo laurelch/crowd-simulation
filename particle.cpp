@@ -1,4 +1,3 @@
-#include <vector>
 #include "particle.h"
 using namespace std;
 Particle::Particle()
@@ -74,7 +73,7 @@ void Particle::setStatus(float x,float y,float dx,float dy,int group,float dss)
     setGroup(group);
     setDisease(dss);
     appendHistory();
-    cout<<history.size()<<endl;
+    cout<<"Particle::setStatus_v1 history.size()="<<history.size()<<endl;
 }
 
 void Particle::setStatus(float* status)
@@ -87,7 +86,7 @@ void Particle::setStatus(float* status)
     setGroup(int(*(f+4)));
     setDisease(*(f+5));
     appendHistory();
-    cout<<history.size()<<endl;
+    cout<<"Particle::setStatus_v2 history.size()="<<history.size()<<endl;
 }
 
 void Particle::appendHistory()
