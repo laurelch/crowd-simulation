@@ -6,11 +6,18 @@ using namespace std;
 Crowd::Crowd()
 {
     Particle* particle;
-    setCount(100);
+    setCount(10);
     for(int i=0;i<getCount();++i){
         particle = new Particle(rand()%600,rand()%600);
+        if(i<getCount()/2){
+            particle->setGroup(0);
+        }else{
+            particle->setGroup(1);
+        }
+        particle->setDisease(float(rand()%100)*0.01);
+        cout<<"particle disease="<<particle->getDisease()<<endl;
         particles.push_back(particle);
-        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
+//        cout<<"particle="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
     }
 }
 
@@ -24,14 +31,19 @@ void Crowd::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     QPen pen;
     pen.setCosmetic(true);
     painter->setPen(pen);
-//    for(int i=0;i<10;++i){
-//        painter->setBrush(QColor(255,0,0));
-//        painter->drawEllipse(QRect(rand()%600,rand()%600,10,10));
-//    }
     for(Particle* particle: qAsConst(particles)){
         painter->setBrush(QColor(255,0,0));
+        int group=particle->getGroup();
+        if(group==1){
+            painter->setBrush(QColor(0,0,255));
+        }
 //        cout<<"particle="<<particle<<"x="<<particle->getX()<<", y="<<particle->getY()<<endl;
         painter->drawEllipse(QRect(particle->getX(),particle->getY(),10,10));
+
+        // plot disease
+        qreal disease=particle->getDisease();
+        painter->setBrush(QColor(255*disease,255*disease,255*disease));
+        painter->drawEllipse(QRect(particle->getX()+700,particle->getY(),10,10));
     }
 }
 

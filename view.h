@@ -14,20 +14,18 @@ public:
     ~View();
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *event);
-
-    int getParticleCount();
-    void setParticleCount(int);
-
     void setPauseCondition(int);
     void togglePause();
     int getPauseCondition();
     void setStepCount(int);
     void incrementStep();
     int getStepCount();
+    void restart();
 
 private:
     int particle_count;
     int step_count;
+    int pause;
 };
 
 #endif // VIEW_H

@@ -7,8 +7,8 @@ View::View(QWidget *parent)
 {
     setRenderHint(QPainter::Antialiasing);
     setScene(new QGraphicsScene);
-    setParticleCount(100);
     setStepCount(0);
+    setPauseCondition(1);
 //    for(int particleNum=0;particleNum<getParticleCount();++particleNum) {
 //        QGraphicsEllipseItem *circleItem = new QGraphicsEllipseItem(QRect(rand()%600,rand()%600,10,10));
 //        circleItem->setBrush(QColor(255,0,0));
@@ -17,20 +17,12 @@ View::View(QWidget *parent)
     Crowd *crowd = new Crowd();
     scene()->addItem(crowd);
     setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    scene()->setSceneRect(QRect(0,0,600,600));
+    scene()->setSceneRect(QRect(0,0,1250,650));
 }
 
 View::~View()
 {
     delete scene();
-}
-
-int View::getParticleCount(){
-    return particle_count;
-}
-
-void View::setParticleCount(int c){
-    this->particle_count = c;
 }
 
 void View::wheelEvent(QWheelEvent *event)
@@ -55,11 +47,16 @@ void View::keyPressEvent(QKeyEvent *event)
     }
     switch(event->key()) {
         case Qt::Key_Space:
-            std::cout<<"View::keyPressEvent space pressed."<<std::endl;
+            togglePause();
+            std::cout<<"View::keyPressEvent space pressed. pause="<<getPauseCondition()<<std::endl;
             break;
         case Qt::Key_S:
             incrementStep();
             std::cout<<"View::keyPressEvent S pressed. step="<<getStepCount()<<std::endl;
+            break;
+        case Qt::Key_R:
+            restart();
+            std::cout<<"View::keyPressEvent R pressed. step="<<getStepCount()<<std::endl;
             break;
     }
 }
@@ -77,4 +74,24 @@ void View::incrementStep()
 int View::getStepCount()
 {
     return step_count;
+}
+
+void View::restart()
+{
+    setStepCount(0);
+}
+
+void View::setPauseCondition(int p)
+{
+    this->pause = p;
+}
+
+void View::togglePause()
+{
+    pause = -pause;
+}
+
+int View::getPauseCondition()
+{
+    return pause;
 }

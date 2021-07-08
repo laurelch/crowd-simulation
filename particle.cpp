@@ -31,3 +31,23 @@ void Particle::setY(qreal y)
 {
     this->y = y;
 }
+
+void Particle::setGroup(int g)
+{
+    group = g;
+}
+
+int Particle::getGroup()
+{
+    return group;
+}
+
+void Particle::setDisease(qreal d)
+{
+    disease = d;
+}
+
+qreal Particle::getDisease()
+{
+    return disease;
+}

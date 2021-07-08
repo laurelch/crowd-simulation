@@ -11,9 +11,15 @@ public:
     void setX(qreal);
     qreal getY();
     void setY(qreal);
+    void setGroup(int);
+    int getGroup();
+    void setDisease(qreal);
+    qreal getDisease();
 private:
     qreal x;
     qreal y;
+    int group;
+    qreal disease;
 };
 
 #endif // PARTICLE_H
