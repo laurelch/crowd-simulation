@@ -11,7 +11,7 @@
 #include <math.h>
 #include <Windows.h>
 #include "Person.h"
-using namespace std;
+#include "view.h"
 
 //float interaction_strength = 5.0;
 //float interaction_range = 1.0;
@@ -30,13 +30,13 @@ class MIGBasicSim
 public:
     MIGBasicSim();
     ~MIGBasicSim();
-    void update();
-    void updateOnePerson(Person*);
+    void update(View* v=nullptr);
+    void updateOnePerson(Person*,View*);
     //Person initialize(float initial_X[], float initial_V[], float desired_displacement[], int group_ID);
     float** interaction_force_and_disease_spread(Person p1, Person p2);
     float** net_interaction_force_and_disease_spread(int p1_index, Person people[]);
-    vector<vector<float>> interaction_force_and_disease_spread(Person*,Person*);
-    vector<vector<float>> net_interaction_force_and_disease_spread(Person*);
+    std::vector<std::vector<float>> interaction_force_and_disease_spread(Person*,Person*);
+    std::vector<std::vector<float>> net_interaction_force_and_disease_spread(Person*);
     void outputCSV(int);
     int getNumPeople();
     void setNumPeople(int);
@@ -54,14 +54,14 @@ public:
     float getMaxInteractionForce();
     void setMaxInteractionForce(float);
 private:
-    vector<Person*> people;
+    std::vector<Person*> people;
     int numPeople;
     int group;
     int row_in_group;
     int column_in_group;
-    vector<vector<float>> initial_centers;
-    vector<vector<float>> displacements;
-    vector<float> initial_velocity;
+    std::vector<std::vector<float>> initial_centers;
+    std::vector<std::vector<float>> displacements;
+    std::vector<float> initial_velocity;
 
     float interaction_strength;
     float interaction_range;

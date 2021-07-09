@@ -16,7 +16,13 @@ View::View(QWidget *parent)
     crowd = new Crowd();
     scene()->addItem(crowd);
     setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    scene()->setSceneRect(QRect(0,0,1250,650));
+    scene()->setSceneRect(QRect(0,0,1300,650));
+    QAbstractScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QAbstractScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setScaleX(10);
+    setOffsetX(360);
+    setScaleY(10);
+    setOffsetY(300);
 }
 
 View::~View()
@@ -77,34 +83,50 @@ int View::getStepCount()
     return step_count;
 }
 
-void View::restart()
-{
+void View::restart(){
     setStepCount(0);
 }
 
-void View::setPauseCondition(int p)
-{
+void View::setPauseCondition(int p){
     this->pause = p;
 }
 
-void View::togglePause()
-{
+void View::togglePause(){
     pause = -pause;
 }
 
-int View::getPauseCondition()
-{
+int View::getPauseCondition(){
     return pause;
 }
 
-void View::setCrowdCount(int count)
-{
+void View::setCrowdCount(int count){
     delete crowd;
     crowd = new Crowd(count);
     scene()->addItem(crowd);
 }
 
-void View::setParticle(int i,float* status)
-{
+void View::setParticle(int i, std::vector<float> status){
+    status[0]=status[0]*scaleX+offsetX;
+    status[1]=status[1]*scaleY+offsetY;
     crowd->setParticleStatus(i,status);
+}
+
+/**
+ * @brief scale up the particle positions to fit view
+ * @param s
+ */
+void View::setScaleX(int s){
+    scaleX = s;
+}
+
+void View::setOffsetX(int o){
+    offsetX = o;
+}
+
+void View::setScaleY(int s){
+    scaleY = s;
+}
+
+void View::setOffsetY(int o){
+    offsetY = o;
 }

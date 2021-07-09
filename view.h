@@ -6,6 +6,7 @@
 #include <QWheelEvent>
 #include <QGraphicsEllipseItem>
 #include "crowd.h"
+
 class View : public QGraphicsView
 {
     Q_OBJECT
@@ -24,12 +25,21 @@ public:
     void restart();
     void setCrowdCount(int);
 //    void setParticle(int,float,float,float,float,int,float);
-    void setParticle(int,float*);
+    void setParticle(int,std::vector<float>);
+    void setScaleX(int);
+    void setOffsetX(int);
+    void setScaleY(int);
+    void setOffsetY(int);
 private:
     int particle_count;
     int step_count;
     int pause;
     Crowd* crowd;
+    int window_h;
+    int scaleX;
+    int offsetX;
+    int scaleY;
+    int offsetY;
 };
 
 #endif // VIEW_H

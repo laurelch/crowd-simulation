@@ -1,4 +1,5 @@
 #include "particle.h"
+#include <QPainter>
 using namespace std;
 Particle::Particle()
 {
@@ -6,14 +7,43 @@ Particle::Particle()
     setY(0);
 }
 
-Particle::Particle(float x,float y)
+Particle::Particle(QGraphicsItem *parent,float x,float y)
 {
+    setParentItem(parent);
+    setPos(x,y);
     setX(x);
     setY(y);
 }
 
 Particle::~Particle()
 {
+}
+
+QRectF Particle::boundingRect() const{
+    return QRectF(0,0,10,10);
+}
+
+void Particle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+//    QPen pen;
+//    pen.setCosmetic(true);
+//    painter->setPen(pen);
+//    painter->setBrush(QColor(255,0,0));
+//    if(group==1){
+//        painter->setBrush(QColor(0,0,255));
+//    }
+//    painter->drawEllipse(QRect(x,y,5,5));
+//    painter->setBrush(QColor(255*(1-disease),255*(1-disease),255*(1-disease)));
+//    painter->drawEllipse(QRect(x+640,y,5,5));
+    QPen pen;
+    pen.setCosmetic(true);
+    painter->setPen(pen);
+    painter->setBrush(QColor(255,0,0));
+    if(group==1){
+        painter->setBrush(QColor(0,0,255));
+    }
+    painter->drawEllipse(QRect(0,0,5,5));
+    painter->setBrush(QColor(255*(1-disease),255*(1-disease),255*(1-disease)));
+    painter->drawEllipse(QRect(640,0,5,5));
 }
 
 float Particle::getX()
@@ -67,13 +97,12 @@ float Particle::getDisease()
 
 void Particle::setStatus(float x,float y,float dx,float dy,int group,float dss)
 {
-    setX(x);
-    setY(y);
+    setPos(x,y);
     setDirection(dx,dy);
     setGroup(group);
     setDisease(dss);
     appendHistory();
-    cout<<"Particle::setStatus_v1 history.size()="<<history.size()<<endl;
+    //cout<<"Particle::setStatus_v1 history.size()="<<history.size()<<endl;
 }
 
 void Particle::setStatus(float* status)
@@ -86,7 +115,17 @@ void Particle::setStatus(float* status)
     setGroup(int(*(f+4)));
     setDisease(*(f+5));
     appendHistory();
-    cout<<"Particle::setStatus_v2 history.size()="<<history.size()<<endl;
+    //cout<<"Particle::setStatus_v2 history.size()="<<history.size()<<endl;
+}
+
+void Particle::setStatus(vector<float> s)
+{
+    setPos(s[0],s[1]);
+    setDirection(s[2],s[3]);
+    setGroup(s[4]);
+    setDisease(s[5]);
+    appendHistory();
+    //cout<<"Particle::setStatus_v3 x="<<s[0]<<", y="<<s[1]<<", group="<<s[4]<<", step="<<history.size()<<endl;
 }
 
 void Particle::appendHistory()

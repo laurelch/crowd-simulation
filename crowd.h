@@ -14,10 +14,15 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void setCount(int);
     int getCount();
-    void setParticleStatus(int i,float*);
+    void setParticleStatus(int i,std::vector<float>);
+    int getWindowH();
+    int getEllipseSize();
+    void setEllipseSize(int);
 private:
     int count;
+    int ellipse_size;
     QVector<Particle*> particles;
+    int window_h;
 };
 
 #endif // CROWD_H

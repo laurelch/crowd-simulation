@@ -1,12 +1,18 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
+
 #include <iostream>
+#include <QGraphicsItem>
 #include <QList>
-class Particle
+#include <vector>
+class Particle : public QGraphicsItem
 {
 public:
     Particle();
-    Particle(float,float);
+    Particle(QGraphicsItem*,float,float);
+    // QGraphicsItem interface
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     ~Particle();
     float getX();
     void setX(float);
@@ -20,6 +26,7 @@ public:
     float getDisease();
     void setStatus(float,float,float,float,int,float);
     void setStatus(float*);
+    void setStatus(std::vector<float>);
     void appendHistory();
 private:
     float x;

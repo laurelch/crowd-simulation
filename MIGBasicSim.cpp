@@ -79,7 +79,7 @@ MIGBasicSim::MIGBasicSim()
         for(int j=0;j<column_in_group;++j){
             vector<float> X;
             X.push_back(initial_centers[0][0]-j);
-            X.push_back(initial_centers[0][0]+i);
+            X.push_back(initial_centers[0][1]+i);
             Person* p;
             p = new Person(p_index,X,initial_velocity,displacements[0],desired_speed,0);
             ++p_index;
@@ -90,7 +90,7 @@ MIGBasicSim::MIGBasicSim()
         for(int j=0;j<column_in_group;++j){
             vector<float> X;
             X.push_back(initial_centers[1][0]-j);
-            X.push_back(initial_centers[1][0]+i);
+            X.push_back(initial_centers[1][1]+i);
             Person* p;
             p = new Person(p_index,X,initial_velocity,displacements[1],desired_speed,1);
             ++p_index;
@@ -205,7 +205,13 @@ vector<vector<float>> MIGBasicSim::net_interaction_force_and_disease_spread(Pers
     return force_disease;
 }
 
-void MIGBasicSim::updateOnePerson(Person* one){
+void MIGBasicSim::update(View* v){
+    for(auto p:people){
+        updateOnePerson(p,v);
+    }
+}
+
+void MIGBasicSim::updateOnePerson(Person* one, View* v){
     vector<float> desired_velocity = one->getDesiredVelocity();
     vector<float> desired_velocity_force = Person::diff(desired_velocity,one->V);
     vector<vector<float>> force_disease = net_interaction_force_and_disease_spread(one);
@@ -216,12 +222,7 @@ void MIGBasicSim::updateOnePerson(Person* one){
         desired_velocity_force[1]+net_interaction_force[1]};
     one->updateXV(dt,a);
     one->updateDisease(dt,disease_change);
-}
-
-void MIGBasicSim::update(){
-    for(auto p:people){
-        updateOnePerson(p);
-    }
+    if(v!=nullptr)v->setParticle(one->getID(),one->getStatus());
 }
 
 void MIGBasicSim::outputCSV(int i){

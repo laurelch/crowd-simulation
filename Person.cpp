@@ -21,7 +21,7 @@
 //    return Person(initial_X, initial_V, destination, desired_speed, group_ID);
 //}
 
-Person::Person(int i, vector<float> X, vector<float> V, vector<float> displacement, float speed, int group)
+Person::Person(int i, std::vector<float> X, std::vector<float> V, std::vector<float> displacement, float speed, int group)
 {
     people_ID=i;
     this->X = X;
@@ -43,7 +43,7 @@ void Person::setDesiredSpeed(float s)
     desired_speed = s;
 }
 
-vector<float> Person::getDesiredVelocity()
+std::vector<float> Person::getDesiredVelocity()
 {
     return desired_velocity;
 }
@@ -63,9 +63,9 @@ vector<float> Person::getDesiredVelocity()
 //}
 
 void Person::setDesiredVelocity(){
-    vector<float> df = diff(X,destination);
+    std::vector<float> df = diff(X,destination);
     float dst = dist(X,destination);
-    vector<float> velocity;
+    std::vector<float> velocity;
     if(dst <= 0.001) {
         velocity.push_back(0.0);
         velocity.push_back(0.0);
@@ -89,7 +89,7 @@ void Person::setDesiredVelocity(){
  * @param dt
  * @param a
  */
-void Person::updateXV(float dt, vector<float> a){
+void Person::updateXV(float dt, std::vector<float> a){
     X[0] = X[0] + V[0] * dt;
     X[1] = X[1] + V[1] * dt;
     V[0] = V[0] + a[0] * dt;
@@ -111,13 +111,17 @@ void Person::setDisease(int d){
     disease = d;
 }
 
-vector<float> Person::getStatus(){
-    vector<float> status = {X[0],X[1],V[0],V[1],float(group_ID),getDisease()};
+std::vector<float> Person::getStatus(){
+    std::vector<float> status = {X[0],X[1],V[0],V[1],float(group_ID),getDisease()};
     return status;
 }
 
-//vector<float> diff(float* a, float* b){
-//    vector<float> d;
+int Person::getID(){
+    return people_ID;
+}
+
+//std::vector<float> diff(float* a, float* b){
+//    std::vector<float> d;
 //    d.push_back(a[0]-b[0]);
 //    d.push_back(a[1]-b[1]);
 //    return d;
@@ -141,14 +145,14 @@ vector<float> Person::getStatus(){
 //    return sqrt((diffs[0] * diffs[0]) + (diffs[1] * diffs[1]));
 //}
 
-vector<float> Person::diff(vector<float> a, vector<float> b){
-    vector<float> d;
+std::vector<float> Person::diff(std::vector<float> a, std::vector<float> b){
+    std::vector<float> d;
     d.push_back(a[0]-b[0]);
     d.push_back(a[1]-b[1]);
     return d;
 }
 
-float Person::dist(vector<float> a, vector<float> b){
+float Person::dist(std::vector<float> a, std::vector<float> b){
     float x1 = a[0];
     float y1 = a[1];
     float x2 = b[0];
