@@ -228,17 +228,17 @@ void MIGBasicSim::outputCSV(int i){
     //zero padding
     stringstream ss;
     ss<<setw(4)<<setfill('0')<<i;
-    string filename(ss.str()+".csv");
+    string filename(".\\output\\"+ss.str()+".csv");
 
-    ofstream fout;
-    fout.open(filename,ios::out);
-    fout<<"pos_x,pos_y,v_x,v_y,group_ID,disease"<<endl;
+    fstream fout;
+    fout.open(filename,fstream::out);
+    fout<<"pos_x,pos_y,v_x,v_y,group_ID,disease"<<endl<<flush;
     for(auto p:people){
         vector<float> status = p->getStatus();
         for(float f:status){
-            fout<<f;
+            fout<<f<<","<<flush;
         }
-        fout<<endl;
+        fout<<endl<<flush;
     }
     fout.close();
 }

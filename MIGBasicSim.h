@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
+#include <Windows.h>
 #include "Person.h"
 using namespace std;
 
