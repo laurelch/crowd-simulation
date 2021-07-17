@@ -145,8 +145,9 @@ vector<vector<float>> MIGBasicSim::interaction_force_and_disease_spread(Person* 
     float mult_factor = interaction_strength * exp(-1 * distance / interaction_range);
     float disease_mult_factor = 1.0;
     if(distance>interaction_radius){
-        mult_factor = 0;
-        disease_mult_factor = 0.0;
+//        mult_factor = 0;
+//        disease_mult_factor = 0.0;
+        return vector<vector<float>> {{0,0},{0,0}};
     }
 
     vector<float> force = {mult_factor*difference[0]/distance, mult_factor*difference[1]/distance};
@@ -190,6 +191,26 @@ vector<vector<float>> MIGBasicSim::interaction_force_and_disease_spread(Person* 
 vector<vector<float>> MIGBasicSim::net_interaction_force_and_disease_spread(Person* one){
     vector<float> force = {0.0,0.0};
     vector<float> disease_change = {0.0};
+
+    for(auto p: people){
+        if(p!=one){
+            vector<vector<float>> current_spread = interaction_force_and_disease_spread(one,p);
+            vector<float> current_force = current_spread[0];
+            force[0]+=current_force[0];
+            force[1]+=current_force[1];
+            disease_change[0]+=current_spread[1][0];
+        }
+    }
+    vector<vector<float>> force_disease;
+    force_disease.push_back(force);
+    force_disease.push_back(disease_change);
+    return force_disease;
+}
+
+vector<vector<float>> MIGBasicSim::concurrent_net_interaction_force_and_disease_spread(Person* one){
+    vector<float> force = {0.0,0.0};
+    vector<float> disease_change = {0.0};
+
     for(auto p: people){
         if(p!=one){
             vector<vector<float>> current_spread = interaction_force_and_disease_spread(one,p);
@@ -207,22 +228,16 @@ vector<vector<float>> MIGBasicSim::net_interaction_force_and_disease_spread(Pers
 
 void MIGBasicSim::update(View* v){
     for(auto p:people){
-        updateOnePerson(p,v);
+        updateOnePerson(p);
+        if(v!=nullptr)v->setParticle(p->getID(),p->getStatus());
     }
 }
 
-void MIGBasicSim::updateOnePerson(Person* one, View* v){
+void MIGBasicSim::updateOnePerson(Person* one){
     vector<float> desired_velocity = one->getDesiredVelocity();
     vector<float> desired_velocity_force = Person::diff(desired_velocity,one->V);
     vector<vector<float>> force_disease = net_interaction_force_and_disease_spread(one);
-    vector<float> net_interaction_force = force_disease[0];
-    float disease_change = force_disease[1][0];
-    vector<float> a = {\
-        desired_velocity_force[0]+net_interaction_force[0],\
-        desired_velocity_force[1]+net_interaction_force[1]};
-    one->updateXV(dt,a);
-    one->updateDisease(dt,disease_change);
-    if(v!=nullptr)v->setParticle(one->getID(),one->getStatus());
+    one->update(dt,force_disease);
 }
 
 void MIGBasicSim::outputCSV(int i){

@@ -10,10 +10,10 @@ class Particle : public QGraphicsItem
 public:
     Particle();
     Particle(QGraphicsItem*,float,float);
+    ~Particle();
     // QGraphicsItem interface
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    ~Particle();
     float getX();
     void setX(float);
     float getY();

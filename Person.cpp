@@ -83,6 +83,15 @@ void Person::setDesiredVelocity(){
 //    V[1] = V[1] + acceleration[1] * dt;
 //}
 
+void Person::update(float dt, std::vector<std::vector<float>> net){
+    std::vector<float> net_interaction_force = net[0];
+    float disease_change = net[1][0];
+    std::vector<float> a = {\
+        getDesiredVelocity()[0]+net_interaction_force[0],\
+        getDesiredVelocity()[1]+net_interaction_force[1]};
+    updateXV(dt,a);
+    updateDisease(dt,disease_change);
+}
 
 /**
  * @brief update position and velocity

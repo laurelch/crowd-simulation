@@ -2,6 +2,7 @@
 #include "view.h"
 #include "MIGBasicSim.h"
 #include "Person.h"
+#include <QThread>
 
 //int main(int argc, char *argv[])
 //{
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
     //one person is infected, people[42].disease = 1.0;
     sim.setInfection(42,1.0);
     int num_steps = ceil(total_time / dt);
-    int test_steps = 3;
+    int test_steps = 1;
     //main loop
     int img_count = 1;
     for (int i = 0; i < num_steps; ++i) {
@@ -44,14 +45,13 @@ int main(int argc, char *argv[])
             if(test_steps<0) break;
             std::cout<<"main::outputCSV at step "<<i<<std::endl;
             sim.outputCSV(img_count);
-            test_steps--;
             img_count++;
+            test_steps--;
             sim.update(&w);
         }
         sim.update();
     }
 
     std::cout << "Done." << std::endl;
-
-    return a.exec();
+    return a.exec();;
 }

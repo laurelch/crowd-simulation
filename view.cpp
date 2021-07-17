@@ -23,6 +23,7 @@ View::View(QWidget *parent)
     setOffsetX(360);
     setScaleY(10);
     setOffsetY(300);
+    setWindowTitle("Crowd Simulation");
 }
 
 View::~View()

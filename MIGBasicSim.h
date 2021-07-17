@@ -31,12 +31,13 @@ public:
     MIGBasicSim();
     ~MIGBasicSim();
     void update(View* v=nullptr);
-    void updateOnePerson(Person*,View*);
+    void updateOnePerson(Person*);
     //Person initialize(float initial_X[], float initial_V[], float desired_displacement[], int group_ID);
     float** interaction_force_and_disease_spread(Person p1, Person p2);
     float** net_interaction_force_and_disease_spread(int p1_index, Person people[]);
     std::vector<std::vector<float>> interaction_force_and_disease_spread(Person*,Person*);
     std::vector<std::vector<float>> net_interaction_force_and_disease_spread(Person*);
+    std::vector<std::vector<float>> concurrent_net_interaction_force_and_disease_spread(Person* one);
     void outputCSV(int);
     int getNumPeople();
     void setNumPeople(int);
