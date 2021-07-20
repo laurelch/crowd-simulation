@@ -226,10 +226,10 @@ vector<vector<float>> MIGBasicSim::concurrent_net_interaction_force_and_disease_
     return force_disease;
 }
 
-void MIGBasicSim::update(View* v){
+void MIGBasicSim::update(){
     for(auto p:people){
         updateOnePerson(p);
-        if(v!=nullptr)v->setParticle(p->getID(),p->getStatus());
+//        if(v!=nullptr)v->setParticle(p->getID(),p->getStatus());
     }
 }
 
@@ -250,10 +250,8 @@ void MIGBasicSim::outputCSV(int i){
     fout.open(filename,fstream::out);
     fout<<"pos_x,pos_y,v_x,v_y,group_ID,disease"<<endl<<flush;
     for(auto p:people){
-        vector<float> status = p->getStatus();
-        for(float f:status){
-            fout<<f<<","<<flush;
-        }
+        status status = p->getStatus();
+        fout<<Particle::statusString(status)<<flush;
         fout<<endl<<flush;
     }
     fout.close();
@@ -323,4 +321,8 @@ float MIGBasicSim::getMaxInteractionForce(){
 
 void MIGBasicSim::setMaxInteractionForce(float f){
     max_interation_force = f;
+}
+
+status MIGBasicSim::getStatus(int p_index){
+    return people[p_index]->getStatus();
 }

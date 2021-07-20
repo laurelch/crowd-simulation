@@ -120,9 +120,20 @@ void Person::setDisease(int d){
     disease = d;
 }
 
-std::vector<float> Person::getStatus(){
-    std::vector<float> status = {X[0],X[1],V[0],V[1],float(group_ID),getDisease()};
-    return status;
+//std::vector<float> Person::getStatus(){
+//    std::vector<float> status = {X[0],X[1],V[0],V[1],float(group_ID),getDisease()};
+//    return status;
+//}
+
+status Person::getStatus(){
+    status s{X[0],X[1],V[0],V[1],group_ID,getDisease()};
+//    s.x=X[0];
+//    s.y=X[1];
+//    s.dx=V[0];
+//    s.dy=V[1];
+//    s.group=group_ID;
+//    s.disease=getDisease();
+    return s;
 }
 
 int Person::getID(){

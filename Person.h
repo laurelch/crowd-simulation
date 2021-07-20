@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <stdio.h>
+#include "particle.h"
 class Person{
 public:
     static const int dim = 2;
@@ -33,7 +34,8 @@ public:
     void updateDisease(float dt,float disease_in);
     float getDisease();
     void setDisease(int);
-    std::vector<float> getStatus();
+    //std::vector<float> getStatus();
+    status getStatus();
     int getID();
     static std::vector<float> diff(std::vector<float> a,std::vector<float> b);
     float dist(Person*);
