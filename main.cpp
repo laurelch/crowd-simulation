@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     CreateDirectoryA(outputDir.c_str(),NULL);
     MIGBasicSim sim;
     //one person is infected, people[42].disease = 1.0;
-    sim.setInfection(42,1.0);
+    //sim.setInfection(42,1.0);
     int num_steps = ceil(total_time / dt);
     int test_steps = 1;
     w.setSimulation(&sim);

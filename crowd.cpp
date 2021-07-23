@@ -76,23 +76,6 @@ int Crowd::getCount(){
     return count;
 }
 
-//void Crowd::setParticleStatus(int index,vector<float> status){
-//    particles[index]->setStatus(status);
-//}
-
 void Crowd::setParticleStatus(int i,struct status s){
     particles[i]->setStatus(s);
-    //std::cout<<"setParticleStatus particle["<<i<<"]=["<<s.x<<","<<s.y<<"]"<<std::endl;
 }
-
-//int Crowd::getWindowH(){
-//    return window_h;
-//}
-
-//int Crowd::getEllipseSize(){
-//    return ellipse_size;
-//}
-
-//void Crowd::setEllipseSize(int s){
-//    ellipse_size = s;
-//}

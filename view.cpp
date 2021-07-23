@@ -1,33 +1,5 @@
 #include "view.h"
 
-/*
-View::View(QWidget *parent)
-    : QGraphicsView(parent)
-{
-    setRenderHint(QPainter::Antialiasing);
-    setScene(new QGraphicsScene);
-    setStepCount(0);
-    setPauseCondition(1);
-//    for(int particleNum=0;particleNum<getParticleCount();++particleNum) {
-//        QGraphicsEllipseItem *circleItem = new QGraphicsEllipseItem(QRect(rand()%600,rand()%600,10,10));
-//        circleItem->setBrush(QColor(255,0,0));
-//        scene()->addItem(circleItem);
-//    }
-
-    crowd = new Crowd();
-    scene()->addItem(crowd);
-//    setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    scene()->setSceneRect(QRect(0,0,600,600));
-//    QAbstractScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//    QAbstractScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setScaleX(10);
-    setOffsetX(360);
-    setScaleY(10);
-    setOffsetY(300);
-    setWindowTitle("Crowd Simulation");
-}
-*/
-
 View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
 {
     Q_UNUSED(parent);
