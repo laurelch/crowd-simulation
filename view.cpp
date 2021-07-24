@@ -55,6 +55,11 @@ void View::keyPressEvent(QKeyEvent *event){
         case Qt::Key_D:
             toggleDisplayMode();
             std::cout<<"View::keyPressEvent D pressed. step="<<getStepCount()<<std::endl;
+            break;
+        case Qt::Key_B:
+            bigStep();
+            std::cout<<"View::keyPressEvent B pressed. step="<<getStepCount()<<std::endl;
+            break;
     }
 }
 
@@ -68,6 +73,14 @@ void View::togglePause(){
 
 void View::incrementStep(){
     for(int i=0;i<step_size;++i){
+        step_count++;
+        simulation->update();
+    }
+    display();
+}
+
+void View::bigStep(){
+    for(int i=0;i<630;++i){
         step_count++;
         simulation->update();
     }

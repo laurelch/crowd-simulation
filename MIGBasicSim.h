@@ -51,7 +51,6 @@ public:
     void setInteractionRange(float);
     void setRelaxationTime(float);
     void setDesiredSpeed(float);
-    void setInteractionRadius(float);
     void setMaxInteractionForce(float);
 
     //getters
@@ -60,12 +59,12 @@ public:
     float getInteractionRange();
     float getRelaxationTime();
     float getDesiredSpeed();
-    float getInteractionRadius();
     float getMaxInteractionForce();
     status getStatus(int);
 private:
     float dt;
     float total_time;
+    float time_till_now;
     int time_steps_per_frame;
 
     std::vector<Person*> people;
@@ -79,7 +78,6 @@ private:
     float interaction_range;
     float relaxation_time;
     float desired_speed;
-    float interaction_radius;
     float max_interation_force;
 
     float social_force_strength;
@@ -90,6 +88,7 @@ private:
     int disease_a;
     float disease_s;
     float disease_radius;
+    float check_radius;
     float disease_range_rs;
     float mask_prob;
     float healthy_life_prob;
@@ -100,6 +99,8 @@ private:
     int people_per_group;
     std::vector<std::vector<float>> initial_centers;
     std::vector<std::vector<float>> displacements;
+
+    struct simData sim_data;
 };
 
 #endif

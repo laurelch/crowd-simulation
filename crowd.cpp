@@ -28,7 +28,7 @@ Crowd::Crowd(int count){
         particle->setDisease(disease);
         //cout<<"particle disease="<<particle->getDisease()<<"=>"<<disease<<endl;
         particles.push_back(particle);
-        cout<<"constructor 2 particle["<<i<<"]="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
+        //cout<<"constructor 2 particle["<<i<<"]="<<particle<<", x="<<particle->getX()<<", y="<<particle->getY()<<endl;
     }
 }
 

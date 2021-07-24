@@ -1,15 +1,13 @@
 #include "MIGBasicSim.h"
 #include <math.h>
 
-MIGBasicSim::MIGBasicSim()
-{
+MIGBasicSim::MIGBasicSim(){
+    time_till_now=0;
     readDescriptionTxt();
     initializeCrowd();
 }
 
-MIGBasicSim::~MIGBasicSim()
-{
-
+MIGBasicSim::~MIGBasicSim(){
     for(auto p:people){
         delete p;
     }
@@ -25,6 +23,7 @@ void MIGBasicSim::readDescriptionTxt(){
     disease_a=0;
     disease_s=1.0;
     disease_radius=2.0;
+    check_radius=std::max(social_force_radius,disease_radius)+0.1;
     disease_range_rs=1.0;
     mask_prob=0;
     healthy_life_prob=0.5;
@@ -38,17 +37,20 @@ void MIGBasicSim::readDescriptionTxt(){
     people_per_group=50;
     num_groups=2;
     num_people=num_groups*people_per_group;
+
     std::vector<float> init_coords_1={-30,0};
     std::vector<float> displacement_coords_1={600,0};
     std::vector<float> init_coords_2={30,0};
     std::vector<float> displacement_coords_2={-600,0};
     initial_centers={init_coords_1,init_coords_2};
     displacements={displacement_coords_1,displacement_coords_2};
+
+    sim_data={dt,relaxation_time,vaccine_factor,disease_a,disease_s};
 }
 
 void MIGBasicSim::initializeCrowd(){
-    std::random_device r;
-    std::default_random_engine e1(r());
+    std::random_device rd;
+    std::mt19937 mt(rd());
     std::uniform_real_distribution<float> distribution(-1*group_init_radius,group_init_radius);
     std::uniform_real_distribution<float> probability(0,1);
     for(int g=0;g<num_groups;++g){
@@ -56,20 +58,23 @@ void MIGBasicSim::initializeCrowd(){
         std::vector<float> disp_center=displacements[g];
         //printf("(%f, %f)\t(%f, %f)\n",init_center[0], init_center[1], disp_center[0], disp_center[1]);
         for(int i=0;i<people_per_group;++i){
-            std::vector<float> rand_coords={distribution(e1),distribution(e1)};
+            std::vector<float> rand_coords={distribution(mt),distribution(mt)};
             std::vector<float> origin={0,0};
             while(Person::dist(rand_coords,origin)>group_init_radius)
-                rand_coords={distribution(e1),distribution(e1)};
+                rand_coords={distribution(mt),distribution(mt)};
+
             std::vector<float> X0={rand_coords[0]+init_center[0],rand_coords[1]+init_center[1]}; //position
             std::vector<float> V0={0.0,0.0}; //velocity
             //std::vector<float> destination={X0[0]+rand_coords[0]+disp_center[0],X0[1]+rand_coords[1]+disp_center[1]};
             std::vector<float> destination={X0[0]+disp_center[0],X0[1]+disp_center[1]};
-            bool masked=probability(e1)<mask_prob;
-            bool healthy_life=probability(e1)<healthy_life_prob;
-            Person* p;
+            bool masked=probability(mt)<mask_prob;
+            bool healthy_life=probability(mt)<healthy_life_prob;
             int p_index=g*people_per_group+i;
+
+            Person* p;
             p=new Person(p_index,X0,V0,destination,desired_speed,g,disease_range_rs,masked,healthy_life);
-            printf("p[%d],(%f,%f),group=%d,destination=(%f,%f)\n",p_index,X0[0],X0[1],g,destination[0],destination[1]);
+            //printf("p[%d],(%f,%f),group=%d,destination=(%f,%f)\n",p_index,X0[0],X0[1],g,destination[0],destination[1]);
+            //printf("desired velocity=(%f,%f)\n",p->getDesiredVelocity()[0],p->getDesiredVelocity()[1]);
             people.push_back(p);
         }
     }
@@ -103,56 +108,75 @@ void MIGBasicSim::initializeCrowdNoMask(){
     }
 }
 
-std::vector<std::vector<float>> MIGBasicSim::interaction_force_and_disease_spread(Person* p1, Person* p2){
-    std::vector<float> difference = Person::diff(p1->X,p2->X);
-    float distance = p1->dist(p2);
-    float mult_factor = interaction_strength * exp(-1 * distance / interaction_range);
-    float disease_mult_factor = 1.0;
-    if(distance>interaction_radius){
-        return std::vector<std::vector<float>> {{0,0},{0,0}};
-    }
+std::vector<std::vector<float>> MIGBasicSim::interaction_force_and_disease_spread(Person *p1, Person *p2){
+    std::vector<float> difference=Person::diff(p2->X,p1->X);
+    float distance=p1->dist(p2);
+    //skip if particles are distant
+    if(distance>check_radius)
+        return std::vector<std::vector<float>>{{0,0},{0,0}};
 
-    std::vector<float> force = {mult_factor*difference[0]/distance, mult_factor*difference[1]/distance};
-    float d_disease = std::max(p2->getDisease()-p1->getDisease(),0.0f); //if p1 is more more infected than p2, p2 cannot infect p1.
-    float distance_sq = distance*distance;
-    std::vector<float> disease = {(exp(-1*distance)*d_disease*disease_mult_factor)/distance_sq};
+    std::vector<float> vel_difference={(p2->X[0]-p1->X[0])*dt,(p2->X[1]-p1->X[1])*dt};
+    float vel_distance=Person::dist(vel_difference,std::vector<float>{0,0});
+    std::vector<float> vel_pos_difference={difference[0]-vel_difference[0],difference[1]-vel_difference[1]};
+    float vel_pos_distance=Person::dist(vel_pos_difference,std::vector<float>{0,0});
 
-    std::vector<std::vector<float>> force_disease;
-    force_disease.push_back(force);
-    force_disease.push_back(disease);
+    //social force
+    float distance_plus_vel_pos_distance=distance+vel_pos_distance;
+    float b_ij=0.5*std::sqrt(distance_plus_vel_pos_distance*distance_plus_vel_pos_distance-vel_distance);
+    float middle_factor=0.5*distance_plus_vel_pos_distance/b_ij;
+    float mult_factor=social_force_strength*middle_factor*std::exp(-b_ij/social_force_range_b);
+    if(distance>social_force_radius)
+        mult_factor=0.0;
+    std::vector<float> force={
+        mult_factor*((difference[0]/distance)+(vel_pos_difference[0]/vel_pos_distance)),
+        mult_factor*((difference[1]/distance)+(vel_pos_difference[1]/vel_pos_distance))};
+
+    //contact force
+    float contact_mult_factor=contact_force_strength*std::max(0.0f,2*particle_radius-distance);
+    force[0]+=contact_mult_factor*difference[0]/distance;
+    force[1]+=contact_mult_factor*difference[1]/distance;
+
+    //disease
+    float disease_mult_factor=1.0;
+    if(distance>disease_radius)
+        disease_mult_factor=0.0;
+    float disease_difference=std::max(p2->getDisease()-p1->getDisease(),0.0f);
+    float distance_sq=distance*distance;
+    std::vector<float> disease={exp(-1*(distance*p2->getMask())/disease_range_rs)*disease_difference*disease_mult_factor/distance_sq};
+
+    std::vector<std::vector<float>> force_disease={force,disease};
     return force_disease;
 }
 
 std::vector<std::vector<float>> MIGBasicSim::net_interaction_force_and_disease_spread(Person* one){
-    std::vector<float> force = {0.0,0.0};
-    std::vector<float> disease_change = {0.0};
-
+    std::vector<float> force={0.0,0.0};
+    std::vector<float> disease_change={0.0};
     for(auto p: people){
         if(p!=one){
-            std::vector<std::vector<float>> current_spread = interaction_force_and_disease_spread(one,p);
-            std::vector<float> current_force = current_spread[0];
+            std::vector<std::vector<float>> current=interaction_force_and_disease_spread(one,p);
+            std::vector<float> current_force=current[0];
             force[0]+=current_force[0];
             force[1]+=current_force[1];
-            disease_change[0]+=current_spread[1][0];
+            disease_change[0]+=current[1][0];
         }
     }
-    std::vector<std::vector<float>> force_disease;
-    force_disease.push_back(force);
-    force_disease.push_back(disease_change);
+    std::vector<std::vector<float>> force_disease={force,disease_change};
     return force_disease;
 }
 
 void MIGBasicSim::update(){
     for(auto p:people){
-        updateOnePerson(p);
+        std::vector<std::vector<float>> force_disease = net_interaction_force_and_disease_spread(p);
+        time_till_now+=dt;
+        p->update(force_disease,time_till_now,sim_data);
     }
 }
 
 void MIGBasicSim::updateOnePerson(Person* one){
     std::vector<float> desired_velocity = one->getDesiredVelocity();
-    std::vector<float> desired_velocity_force = Person::diff(desired_velocity,one->V);
+    std::vector<float> desired_velocity_force = Person::diff(one->V,desired_velocity);
     std::vector<std::vector<float>> force_disease = net_interaction_force_and_disease_spread(one);
-    one->update(dt,force_disease);
+    one->update(dt,force_disease,relaxation_time);
 }
 
 void MIGBasicSim::outputCSV(int i){
@@ -217,14 +241,6 @@ float MIGBasicSim::getDesiredSpeed(){
 
 void MIGBasicSim::setDesiredSpeed(float s){
     desired_speed = s;
-}
-
-float MIGBasicSim::getInteractionRadius(){
-    return interaction_radius;
-}
-
-void MIGBasicSim::setInteractionRadius(float r){
-    interaction_radius = r;
 }
 
 float MIGBasicSim::getMaxInteractionForce(){
