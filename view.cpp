@@ -6,7 +6,7 @@ View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
     setScene(scene);
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     crowd = new Crowd();
-    scene->addItem(crowd);
+    //scene->addItem(crowd);
     float scale=8.1;
     scene->setSceneRect(QRect(-50*scale,-40*scale,100*scale,80*scale));
     setMouseTracking(true);
@@ -68,7 +68,7 @@ void View::toggleDisplayMode(){
 }
 
 void View::togglePause(){
-    pause = -pause;
+    pause=-pause;
 }
 
 void View::incrementStep(){
@@ -127,7 +127,8 @@ void View::setStepCount(int s)
 void View::setCrowdCount(int count){
     delete crowd;
     crowd = new Crowd(count);
-    scene()->addItem(crowd);
+    //scene()->addItem(crowd);
+    addParticles();
 }
 
 void View::setStepSize(int s){
@@ -135,5 +136,39 @@ void View::setStepSize(int s){
 }
 
 void View::setScale(float s){
+    //scene()->setSceneRect(QRect(-50*s,-40*s,100*s,80*s));
     crowd->setScale(s);
+}
+
+void View::mousePressEvent(QMouseEvent *event){
+//    printItems();
+//    QPoint p=event->pos();
+//    QPointF pf=mapToScene(p);
+//    if(!itemAt(pf.toPoint())){
+//        std::cout<<"["<<pf.x()<<","<<pf.y()<<"]"<<std::endl;
+//        qDebug("Nothing");
+//    }else{
+//        qDebug("Item Selected");
+//    }
+    if(!itemAt(event->pos())){
+        qDebug("Nothing");
+    }else{
+        qDebug("Item Selected");
+    }
+    QGraphicsView::mousePressEvent(event);
+}
+
+void View::addParticles(){
+    QVector<Particle*> vector=crowd->getParticles();
+    for(QVector<Particle*>::iterator i=vector.begin();i!=vector.end();++i){
+        scene()->addItem(*i);
+    }
+}
+
+void View::printItems(){
+    QList<QGraphicsItem*> item_list=items();
+    QList<QGraphicsItem*>::iterator i;
+    for(i=item_list.begin();i!=item_list.end();++i){
+        std::cout<<(*i)->pos().x()<<" "<<(*i)->pos().y()<<std::endl;
+    }
 }
