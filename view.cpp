@@ -6,11 +6,14 @@ View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
     setScene(scene);
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     crowd = new Crowd();
-    //scene->addItem(crowd);
     float scale=8.1;
     scene->setSceneRect(QRect(-50*scale,-40*scale,100*scale,80*scale));
     setMouseTracking(true);
     viewport()->setMouseTracking(true);
+    //Top left info display
+    QString string="Particle Info\n";
+    text=scene->addText(string);
+    text->setPos(-400,-320);
 }
 
 View::~View()
@@ -129,6 +132,7 @@ void View::setCrowdCount(int count){
     crowd = new Crowd(count);
     //scene()->addItem(crowd);
     addParticles();
+    crowd->setTextPointer(text);
 }
 
 void View::setStepSize(int s){
@@ -141,15 +145,6 @@ void View::setScale(float s){
 }
 
 void View::mousePressEvent(QMouseEvent *event){
-//    printItems();
-//    QPoint p=event->pos();
-//    QPointF pf=mapToScene(p);
-//    if(!itemAt(pf.toPoint())){
-//        std::cout<<"["<<pf.x()<<","<<pf.y()<<"]"<<std::endl;
-//        qDebug("Nothing");
-//    }else{
-//        qDebug("Item Selected");
-//    }
     if(!itemAt(event->pos())){
         qDebug("Nothing");
     }else{

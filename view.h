@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QWheelEvent>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsSimpleTextItem>
 #include <QPointF>
 #include "crowd.h"
 #include "MIGBasicSim.h"
@@ -47,6 +48,7 @@ private:
     QGraphicsScene* graphicsScene;
     Crowd* crowd;
     MIGBasicSim* simulation;
+    QGraphicsTextItem* text;
     int particle_count;
     int step_count;
     int pause;

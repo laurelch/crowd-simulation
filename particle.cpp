@@ -36,7 +36,7 @@ void Particle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     if(isSelected()){
         painter->setBrush(QColor(0,255,0));
     }else if(hovered||selected){
-        painter->setBrush(QColor(255,255,180));
+        painter->setBrush(QColor(255,220,140));
     }else if(display_mode==0){
         if(s.group==0){
             painter->setBrush(QColor(255,0,0));
@@ -115,6 +115,7 @@ void Particle::setDisease(float d){
 void Particle::setStatus(struct status s){
     this->s=s;
     setPos(getX(),getY());
+    setStatusDisplayString();
     update();
 }
 
@@ -144,15 +145,28 @@ std::string Particle::statusString(struct status s){
     return str;
 }
 
+void Particle::setTextPointer(QGraphicsTextItem *text){
+    this->text=text;
+}
+
+void Particle::setStatusDisplayString(){
+    QString status="Particle Info\n";
+    status+="Index="+QString::number(id)+'\n';
+    status+='['+QString::number(s.x)+','+QString::number(s.y)+']'+'\n';
+    statusDisplayString=status;
+}
+
 void Particle::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
     Q_UNUSED(event);
     hovered=true;
+    text->setPlainText(statusDisplayString);
     update();
 }
 
 void Particle::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
     Q_UNUSED(event);
     hovered=false;
+    text->setPlainText("Particle Info\n");
     update();
 }
 

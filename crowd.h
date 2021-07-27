@@ -15,6 +15,7 @@ public:
     int getCount();
     void setParticleStatus(int i,struct status);
     QVector<Particle*> getParticles();
+    void setTextPointer(QGraphicsTextItem*);
 private:
     int count;
     float scale;

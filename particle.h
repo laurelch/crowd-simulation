@@ -2,9 +2,9 @@
 #define PARTICLE_H
 
 #include <iostream>
-#include <QGraphicsItem>
+#include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-#include <QGraphicsItem>
+#include <QGraphicsTextItem>
 #include <QList>
 #include <vector>
 #include <string>
@@ -48,6 +48,8 @@ public:
     void setID(int);
 //    void appendHistory();
     static std::string statusString(struct status s);
+    void setTextPointer(QGraphicsTextItem *);
+    void setStatusDisplayString();
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
@@ -67,6 +69,8 @@ private:
     float scale;
     bool hovered;
     bool selected;
+    QGraphicsTextItem *text;
+    QString statusDisplayString;
 };
 
 #endif // PARTICLE_H

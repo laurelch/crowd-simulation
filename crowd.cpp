@@ -71,3 +71,9 @@ void Crowd::setParticleStatus(int i,struct status s){
 QVector<Particle*> Crowd::getParticles(){
     return particles;
 }
+
+void Crowd::setTextPointer(QGraphicsTextItem* text){
+    for(int i=0;i<particles.size();++i){
+        particles[i]->setTextPointer(text);
+    }
+}
