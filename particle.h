@@ -37,6 +37,7 @@ public:
     int getGroup();
     float getDisease();
     struct status getStatus();
+    QColor getDiseaseColor();
 
     void setX(float);
     void setY(float);
@@ -69,7 +70,6 @@ private:
     int display_mode;
     float scale;
     bool hovered;
-    bool selected;
     QGraphicsTextItem *text;
     QString statusDisplayString;
 };

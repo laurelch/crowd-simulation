@@ -11,8 +11,8 @@ int main(int argc, char *argv[]){
     w.show();
 
     w.setCrowdCount(num_people);
-    w.setScale(10);
-    w.setStepSize(10);
+    w.setScale(11);
+    w.setStepSize(15);
     //create output directory
     std::string outputDir = ".\\output";
     CreateDirectoryA(outputDir.c_str(),NULL);

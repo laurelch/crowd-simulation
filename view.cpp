@@ -6,7 +6,7 @@ View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
     setScene(scene);
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     crowd = new Crowd();
-    float scale=8.1;
+    float scale=8.5;
     scene->setSceneRect(QRect(-50*scale,-40*scale,100*scale,80*scale));
     setMouseTracking(true);
     viewport()->setMouseTracking(true);
