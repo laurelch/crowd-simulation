@@ -22,6 +22,7 @@ public:
 //    void wheelEvent(QWheelEvent *event);
     virtual void keyPressEvent(QKeyEvent *event) override;
     void toggleDisplayMode();
+    void play();
     void togglePause();
     void incrementStep();
     void bigStep();
@@ -51,7 +52,7 @@ private:
     QGraphicsTextItem* text;
     int particle_count;
     int step_count;
-    int pause;
+    bool pause;
     int window_h;
     int step_size;
 };

@@ -35,7 +35,7 @@ void Particle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     //std::cout<<"Particle::paint x="<<x<<", y="<<y<<std::endl;
     if(isSelected()){
         painter->setBrush(QColor(0,255,0));
-    }else if(hovered||selected){
+    }else if(hovered){
         painter->setBrush(QColor(255,220,140));
     }else if(display_mode==0){
         if(s.group==0){
@@ -56,6 +56,10 @@ void Particle::toggleDisplayMode(){
 }
 
 //getters
+int Particle::getID(){
+    return id;
+}
+
 float Particle::getX(){
     return s.x*scale;
 }
@@ -173,7 +177,6 @@ void Particle::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
 void Particle::mousePressEvent(QGraphicsSceneMouseEvent *event){
     Q_UNUSED(event);
     std::cout<<"Particle::press ["<<getX()<<","<<getY()<<"]"<<std::endl;
-    selected=true;
     update();
 }
 

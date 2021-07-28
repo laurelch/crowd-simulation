@@ -14,6 +14,7 @@ View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
     QString string="Particle Info\n";
     text=scene->addText(string);
     text->setPos(-400,-320);
+    pause=true;
 }
 
 View::~View()
@@ -71,7 +72,7 @@ void View::toggleDisplayMode(){
 }
 
 void View::togglePause(){
-    pause=-pause;
+    pause=!pause;
 }
 
 void View::incrementStep(){
@@ -145,10 +146,16 @@ void View::setScale(float s){
 }
 
 void View::mousePressEvent(QMouseEvent *event){
-    if(!itemAt(event->pos())){
+    Particle* selected=(Particle*)itemAt(event->pos());
+    if(!selected){
         qDebug("Nothing");
     }else{
+        int index=selected->getID();
+        float disease=1;
+        simulation->setInfection(index,disease);
         qDebug("Item Selected");
+        struct status s=simulation->getStatus(index);
+        crowd->setParticleStatus(index,s);
     }
     QGraphicsView::mousePressEvent(event);
 }

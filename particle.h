@@ -29,6 +29,7 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     void toggleDisplayMode();
 
+    int getID();
     float getX();
     float getY();
     float getR() const;
