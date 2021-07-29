@@ -3,6 +3,7 @@
 View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
 {
     Q_UNUSED(parent);
+    graphicsScene=scene;
     setScene(scene);
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     crowd = new Crowd();
@@ -10,11 +11,11 @@ View::View(QGraphicsScene *scene,QWidget *parent): graphicsScene(scene)
     scene->setSceneRect(QRect(-50*scale,-40*scale,100*scale,80*scale));
     setMouseTracking(true);
     viewport()->setMouseTracking(true);
-    //Top left info display
-    QString string="Particle Info\n";
-    text=scene->addText(string);
-    text->setPos(-400,-320);
-    pause=true;
+
+    //Info Display at Top of GUI
+    text=addText("Particle Info\n",-400,-300,16);
+    addText("(Hover to view)\n",-400,-320,10);
+    addText("S - Step Forward    D - Switch Display Mode    R - Reset\n",-200,-340,12);
 }
 
 View::~View()
@@ -103,6 +104,8 @@ void View::display(){
 }
 
 void View::restart(){
+    simulation->reset();
+    display();
     setStepCount(0);
 }
 
@@ -173,4 +176,15 @@ void View::printItems(){
     for(i=item_list.begin();i!=item_list.end();++i){
         std::cout<<(*i)->pos().x()<<" "<<(*i)->pos().y()<<std::endl;
     }
+}
+
+QGraphicsTextItem* View::addText(QString content,float x,float y,int size){
+    QGraphicsTextItem* text=graphicsScene->addText(content);
+    text->setPos(x,y);
+    if(size>0){
+        QFont font=text->font();
+        font.setPointSize(size);
+        text->setFont(font);
+    }
+    return text;
 }

@@ -43,6 +43,7 @@ public:
 
     void addParticles();
     void printItems();
+    QGraphicsTextItem* addText(QString,float,float,int=0);
 protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
 private:
@@ -50,6 +51,7 @@ private:
     Crowd* crowd;
     MIGBasicSim* simulation;
     QGraphicsTextItem* text;
+    QGraphicsTextItem* keyText;
     int particle_count;
     int step_count;
     bool pause;
